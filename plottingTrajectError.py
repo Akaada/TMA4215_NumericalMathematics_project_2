@@ -32,3 +32,19 @@ def errorPlot(X, times, Xref, sys,methodName ):
     plt.ylabel(r"$\|x^{(n)} - x_{\mathrm{ref}}(t_n)\|_2$")
     plt.title(f"{sys['name']}: error over time with {methodName}")
     plt.show()
+
+def findXref(sys,times):
+    B,DU = sys["B"],sys["DU"]
+
+
+    def f(t, y):
+        x, v = y[:3], y[3:]
+        return np.concatenate([v, np.cross(v, B(x)) - DU(x)])
+
+    y0 = np.concatenate([sys["x0"], sys["v0"]])
+
+    solution = solve_ivp(f,[times[0],times[-1]],y0)
+
+
+    return solution.y[:3] # We only wan the first 3 colums in the solution
+    
