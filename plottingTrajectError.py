@@ -54,4 +54,11 @@ def E(X,V,U):
     potential = np.array([U(x) for x in X])
     return potential + kinetic
 
-    
+
+def plotEnergyError(X,V,U,times):
+    energy = E(X,V,U)
+    error = np.abs(energy - energy[0])
+    plt.semilogy(times[1:],error[1:])
+    plt.xlabel("$t_n$")
+    plt.ylabel("$e_n$")
+    plt.show()
