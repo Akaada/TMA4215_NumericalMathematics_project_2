@@ -5,7 +5,7 @@ def plotTraject(X,sys):
     nrows = 1
     if sys["name"] == "tokamak":
         nrows =2
-    fig, axs  = plt.subplots(nrows=nrows,ncols=1)
+    fig, axs  = plt.subplots(nrows=nrows,ncols=1,squeeze=False)
 
 
     axs[0].plot(X[:,0],X[:,1])
