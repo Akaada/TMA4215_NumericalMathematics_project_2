@@ -46,5 +46,12 @@ def findXref(sys,times):
     solution = solve_ivp(f,[times[0],times[-1]],y0)
 
 
-    return solution.y[:3] # We only wan the first 3 colums in the solution
+    return solution.y[:3] # We only want the first 3 colums in the solution
+
+
+def E(X,V,U):
+    kinetic = 0.5 *np.sum(V**2,axis =1)
+    potential = np.array([U(x) for x in X])
+    return potential + kinetic
+
     
