@@ -9,6 +9,7 @@ def task5B(methods, system, T=1e3, h0=0.1):
     sys = create_2d() if system == "2d" else create_tokamak()
     h = h0 / 2**np.arange(3)                 
     XRef = findXref(sys,np.array([0.0,T]))
+    print("XRef Done")
 
     fig, axs = plt.subplots(1, 2, figsize=(12, 5))
     for method in methods:
@@ -18,6 +19,7 @@ def task5B(methods, system, T=1e3, h0=0.1):
             start = perf_counter()
             X, V, times, name = method(sys, hi, T)
             tau[i] = perf_counter() - start
+            print(f"i = {i} done")
 
             
             err[i] = np.linalg.norm(X[-1] - XRef[-1])   
