@@ -73,7 +73,7 @@ def task5A(method, system, Xref=None, T=1e5, h=0.1):
     sys = create_2d() if system == "2d" else create_tokamak()
 
     X, V, times, methodName = method(sys, h, T)
-    if Xref == None:
+    if Xref is None:
         Xref = findXref(sys, times)
 
     plotTraject(X, sys, methodName)
