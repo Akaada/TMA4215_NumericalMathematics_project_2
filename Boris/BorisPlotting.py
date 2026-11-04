@@ -12,9 +12,10 @@ from problem5B import task5B
 
 if __name__ == "__main__":
     # 5A: bane, feil over tid og energifeil (T = 1e5, h = 0.1)
-    task5A(boris, "2d")
-    task5A(boris, "tokamak")
+    # save=True lagrer figurene som PNG i plots/ (i rotmappen)
+    task5A(boris, "2d", save=True)
+    task5A(boris, "tokamak", save=True)
 
     # 5B: konvergensorden og work-precision (T = 1e3, h = 0.1, 0.05, 0.025)
-    task5B([boris], "2d")
-    task5B([boris], "tokamak")
+    task5B([boris], "2d", save=True)
+    task5B([boris], "tokamak", save=True)

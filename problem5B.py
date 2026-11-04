@@ -1,11 +1,11 @@
 import numpy as np
 from time import perf_counter
 from create_systems import create_2d, create_tokamak
-from plottingTrajectError import findXref
+from plottingTrajectError import findXref, showPlot
 import matplotlib.pyplot as plt
 
 
-def task5B(methods, system, T=1e3, h0=0.1):
+def task5B(methods, system, T=1e3, h0=0.1, save=False):
     sys = create_2d() if system == "2d" else create_tokamak()
     h = h0 / 2**np.arange(3)                 
     XRef = findXref(sys,np.array([0.0,T]))
@@ -39,7 +39,8 @@ def task5B(methods, system, T=1e3, h0=0.1):
     for ax in axs:
         ax.legend()
     fig.tight_layout()
-    plt.show()
+    names = "_".join(method.__name__ for method in methods)
+    showPlot(f"{sys['name']}_{names}_order_workprecision", save)
 
 
         

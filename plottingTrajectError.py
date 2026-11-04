@@ -1,11 +1,25 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 from create_systems import create_2d, create_tokamak
 
 
+ ### 
+ #dette er bare for å lagre plot underveis, kan fjernes når vi lager notebook, da bytter vi bare showplot func med plt.show
+# Figurer lagres i mappen plots/ i rotmappen til prosjektet
+PLOT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "plots")
 
-def plotTraject(X, sys, methodName):
+
+def showPlot(filename, save=False):
+    """Viser gjeldende figur. Hvis save=True lagres den også som plots/<filename>.png."""
+    if save:
+        os.makedirs(PLOT_DIR, exist_ok=True)
+        plt.savefig(os.path.join(PLOT_DIR, f"{filename}.png"), dpi=150, bbox_inches="tight")
+    plt.show()
+
+###
+def plotTraject(X, sys, methodName, save=False):
     nrows = 2 if sys["name"] == "tokamak" else 1
     fig, axs = plt.subplots(nrows=nrows, ncols=1, squeeze=False, figsize=(6, 5*nrows))
     axs = axs[:, 0]   # squeeze=False gives a 2D array; take the column of axes
@@ -24,16 +38,16 @@ def plotTraject(X, sys, methodName):
         axs[1].set_title(f"tokamak: $(R, x_3)$ with {methodName}")
 
     fig.tight_layout()
-    plt.show()
+    showPlot(f"{sys['name']}_{methodName}_trajectory", save)
 
 
-def errorPlot(X, times, Xref, sys, methodName):
+def errorPlot(X, times, Xref, sys, methodName, save=False):
     err = np.linalg.norm(X - Xref, axis=1)
     plt.semilogy(times[1:], err[1:])   # skip n=0: err = 0 there, and log(0) = -inf
     plt.xlabel("$t_n$")
     plt.ylabel(r"$\|x^{(n)} - x_{\mathrm{ref}}(t_n)\|_2$")
     plt.title(f"{sys['name']}: error over time with {methodName}")
-    plt.show()
+    showPlot(f"{sys['name']}_{methodName}_error", save)
 
 
 def findXref(sys, times):
@@ -59,25 +73,25 @@ def E(X, V, U):
     return potential + kinetic
 
 
-def plotEnergyError(X, V, U, times, sys, methodName):
+def plotEnergyError(X, V, U, times, sys, methodName, save=False):
     energy = E(X, V, U)
     error = np.abs(energy - energy[0])
     plt.semilogy(times[1:], error[1:])
     plt.xlabel("$t_n$")
     plt.ylabel("$e_n$")
     plt.title(f"{sys['name']}: energy error with {methodName}")
-    plt.show()
+    showPlot(f"{sys['name']}_{methodName}_energy", save)
 
 
-def task5A(method, system, Xref=None, T=1e5, h=0.1):
+def task5A(method, system, Xref=None, T=1e5, h=0.1, save=False):
     sys = create_2d() if system == "2d" else create_tokamak()
 
     X, V, times, methodName = method(sys, h, T)
     if Xref is None:
         Xref = findXref(sys, times)
 
-    plotTraject(X, sys, methodName)
-    errorPlot(X, times, Xref, sys, methodName)
-    plotEnergyError(X, V, sys["U"], times, sys, methodName)
+    plotTraject(X, sys, methodName, save)
+    errorPlot(X, times, Xref, sys, methodName, save)
+    plotEnergyError(X, V, sys["U"], times, sys, methodName, save)
 
 
