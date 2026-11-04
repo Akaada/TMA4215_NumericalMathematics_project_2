@@ -35,7 +35,7 @@ def boris(sys, h, T):
     V_half[0] = init_backward_step(sys, h)
 
     for n in range(N):
-        X[n], V_half[n] = boris_step(X[n], V_half[n], h, sys)
+        X[n + 1], V_half[n + 1] = boris_step(X[n], V_half[n], h, sys)
 
     _, V_half[N + 1] = boris_step(X[N], V_half[N], h, sys)
 
