@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 from create_systems import create_2d, create_tokamak
-from RungeKutta4Method import RK4
+
 
 
 def plotTraject(X, sys, methodName):
@@ -73,12 +73,11 @@ def task5A(method, system, Xref=None, T=1e5, h=0.1):
     sys = create_2d() if system == "2d" else create_tokamak()
 
     X, V, times, methodName = method(sys, h, T)
-
-    
-    Xref = findXref(sys, times)
+    if Xref == None:
+        Xref = findXref(sys, times)
 
     plotTraject(X, sys, methodName)
     errorPlot(X, times, Xref, sys, methodName)
     plotEnergyError(X, V, sys["U"], times, sys, methodName)
 
-    return Xref
+

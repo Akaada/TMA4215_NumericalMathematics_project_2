@@ -31,5 +31,4 @@ def RK4(sys, h, T):
 
     for n in range(N):
         X[n+1], V[n+1] = RK4_step(f, X[n], V[n], h)
-
     return X, V, h * np.arange(N + 1), "RK4"
