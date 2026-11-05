@@ -17,6 +17,7 @@ def showPlot(filename, save=False):
         os.makedirs(PLOT_DIR, exist_ok=True)
         plt.savefig(os.path.join(PLOT_DIR, f"{filename}.png"), dpi=150, bbox_inches="tight")
     plt.show()
+    plt.close()   # lukk figuren så neste plott ikke tegnes oppå denne
 
 ###
 def plotTraject(X, sys, methodName, save=False):
@@ -43,6 +44,7 @@ def plotTraject(X, sys, methodName, save=False):
 
 def errorPlot(X, times, Xref, sys, methodName, save=False):
     err = np.linalg.norm(X - Xref, axis=1)
+    plt.figure()   # ny figur, ellers tegnes plottet i forrige figur
     plt.semilogy(times[1:], err[1:])   # skip n=0: err = 0 there, and log(0) = -inf
     plt.xlabel("$t_n$")
     plt.ylabel(r"$\|x^{(n)} - x_{\mathrm{ref}}(t_n)\|_2$")
@@ -76,6 +78,7 @@ def E(X, V, U):
 def plotEnergyError(X, V, U, times, sys, methodName, save=False):
     energy = E(X, V, U)
     error = np.abs(energy - energy[0])
+    plt.figure()   # ny figur, ellers tegnes plottet i forrige figur
     plt.semilogy(times[1:], error[1:])
     plt.xlabel("$t_n$")
     plt.ylabel("$e_n$")

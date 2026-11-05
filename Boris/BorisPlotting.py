@@ -5,12 +5,16 @@ import sys as pysys   # kalt pysys for å ikke forveksles med system-dicten sys 
 # dette gjør så denne filen kan se de
 pysys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
+
+
+
+
 from BorisMethod import boris
 from plottingTrajectError import task5A
 from problem5B import task5B
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  #gjør så filene ikke plotter vis de hentes som import... ikke viktig men standard. 
     # 5A: bane, feil over tid og energifeil (T = 1e5, h = 0.1)
     # save=True lagrer figurene som PNG i plots/ (i rotmappen)
     task5A(boris, "2d", save=True)
