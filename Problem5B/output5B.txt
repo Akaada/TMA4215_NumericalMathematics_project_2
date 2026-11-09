@@ -1,0 +1,26 @@
+XRef Done
+2D       RK4                  h = 0.1000: e = 2.837e-04, tau = 2.03 s
+2D       RK4                  h = 0.0500: e = 1.081e-05, tau = 4.17 s
+2D       RK4                  h = 0.0250: e = 4.582e-07, tau = 7.99 s
+2D       RK4                  observed order: 4.71, 4.56
+2D       Boris                h = 0.1000: e = 7.240e-02, tau = 0.87 s
+2D       Boris                h = 0.0500: e = 1.836e-02, tau = 1.76 s
+2D       Boris                h = 0.0250: e = 4.594e-03, tau = 3.57 s
+2D       Boris                observed order: 1.98, 2.00
+2D       Symmetric Multistep  h = 0.1000: e = 1.171e-02, tau = 0.49 s
+2D       Symmetric Multistep  h = 0.0500: e = 6.987e-04, tau = 0.98 s
+2D       Symmetric Multistep  h = 0.0250: e = 4.278e-05, tau = 1.86 s
+2D       Symmetric Multistep  observed order: 4.07, 4.03
+XRef Done
+tokamak  RK4                  h = 0.1000: e = 8.174e-07, tau = 1.92 s
+tokamak  RK4                  h = 0.0500: e = 5.200e-08, tau = 4.34 s
+tokamak  RK4                  h = 0.0250: e = 3.189e-09, tau = 8.47 s
+tokamak  RK4                  observed order: 3.97, 4.03
+tokamak  Boris                h = 0.1000: e = 1.214e-03, tau = 0.82 s
+tokamak  Boris                h = 0.0500: e = 3.063e-04, tau = 1.58 s
+tokamak  Boris                h = 0.0250: e = 7.662e-05, tau = 3.27 s
+tokamak  Boris                observed order: 1.99, 2.00
+tokamak  Symmetric Multistep  h = 0.1000: e = 1.610e-04, tau = 0.49 s
+tokamak  Symmetric Multistep  h = 0.0500: e = 9.957e-06, tau = 0.93 s
+tokamak  Symmetric Multistep  h = 0.0250: e = 6.206e-07, tau = 1.81 s
+tokamak  Symmetric Multistep  observed order: 4.01, 4.00

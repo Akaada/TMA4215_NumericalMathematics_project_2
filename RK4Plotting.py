@@ -1,6 +1,6 @@
 from RungeKutta4Method import RK4
 from plottingTrajectError import task5A
-from problem5B import task5B
+from Problem5B.problem5B import task5B
 
 
 if __name__ == "__main__":  # plotter bare når filen kjøres direkte, ikke ved import
