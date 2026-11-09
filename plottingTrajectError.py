@@ -52,7 +52,7 @@ def errorPlot(X, times, Xref, sys, methodName, save=False):
     showPlot(f"{sys['name']}_{methodName}_error", save)
 
 
-def findXref(sys, times):
+def findXref(sys, times,rtol = 1e-12):
     B, DU = sys["B"], sys["DU"]
 
     def f(t, y):
@@ -61,7 +61,7 @@ def findXref(sys, times):
 
     y0 = np.concatenate([sys["x0"], sys["v0"]])
     solution = solve_ivp(f, (times[0], times[-1]), y0, method="DOP853",
-                         t_eval=times, rtol=1e-12, atol=1e-12)
+                         t_eval=times, rtol=rtol, atol=1e-12)
     if not solution.success:
         print("Reference solution failed:", solution.message)
 
