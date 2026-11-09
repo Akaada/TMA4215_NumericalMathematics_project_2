@@ -1,7 +1,7 @@
 import os
 import sys as pysys   # kalt pysys for å ikke forveksles med system-dicten sys i funksjonene
 
-# Fellesfilene (create_systems, plottingTrajectError, problem5B) ligger i mappen over Boris
+# Fellesfilene (create_systems, plottingTrajectError, Problem5B/) ligger i mappen over Boris
 # dette gjør så denne filen kan se de
 pysys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
@@ -11,7 +11,7 @@ pysys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".
 
 from BorisMethod import boris
 from plottingTrajectError import task5A
-from problem5B import task5B
+from Problem5B.problem5B import task5B
 
 
 if __name__ == "__main__":  #gjør så filene ikke plotter vis de hentes som import... ikke viktig men standard. 
