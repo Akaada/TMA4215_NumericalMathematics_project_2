@@ -21,9 +21,9 @@ def showPlot(filename, save=False):
 
 ###
 def plotTraject(X, sys, methodName, save=False):
-    nrows = 2 if sys["name"] == "tokamak" else 1
-    fig, axs = plt.subplots(nrows=nrows, ncols=1, squeeze=False, figsize=(6, 5*nrows))
-    axs = axs[:, 0]   # squeeze=False gives a 2D array; take the column of axes
+    ncols = 2 if sys["name"] == "tokamak" else 1
+    fig, axs = plt.subplots(nrows=1, ncols=ncols, squeeze=False, figsize=(6*ncols, 5))
+    axs = axs[0]   # squeeze=False gives a 2D array; take the single row of axes
 
     axs[0].plot(X[:, 0], X[:, 1], lw=0.5)
     axs[0].set_xlabel("$x_1$")
@@ -40,7 +40,6 @@ def plotTraject(X, sys, methodName, save=False):
 
     fig.tight_layout()
     showPlot(f"{sys['name']}_{methodName}_trajectory", save)
-
 
 def errorPlot(X, times, Xref, sys, methodName, save=False):
     err = np.linalg.norm(X - Xref, axis=1)

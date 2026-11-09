@@ -1,3 +1,14 @@
+import sys as _sys   # aliased, since you use `sys` for the system dict
+from pathlib import Path
+
+# Parent folder of the current working directory:
+_sys.path.insert(0, str(Path.cwd().parent))
+
+# Or an explicit folder:
+# _sys.path.insert(0, r"/full/path/to/folder")
+
+from plottingTrajectError import findXref   # file name without .py
+
 import numpy as np
 from plottingTrajectError import findXref
 
