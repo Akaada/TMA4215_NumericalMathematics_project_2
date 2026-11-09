@@ -1,0 +1,6 @@
+# Python-cache (lages automatisk når koden kjøres)
+__pycache__/
+*.pyc
+
+# Jupyter-sjekkpunkter
+.ipynb_checkpoints/
