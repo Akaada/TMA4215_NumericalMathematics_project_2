@@ -52,7 +52,7 @@ def errorPlot(X, times, Xref, sys, methodName, save=False):
     showPlot(f"{sys['name']}_{methodName}_error", save)
 
 
-def findXref(sys, times,rtol = 1e-12):
+def findXref(sys, times,rtol = 1e-12,return_v=False):
     B, DU = sys["B"], sys["DU"]
 
     def f(t, y):
@@ -65,7 +65,8 @@ def findXref(sys, times,rtol = 1e-12):
     if not solution.success:
         print("Reference solution failed:", solution.message)
 
-    # solution.y has shape (6, N+1); rows 0-2 are positions. Transpose to (N+1, 3).
+    if return_v:
+        return solution.y[:3].T, solution.y[3:].T
     return solution.y[:3].T
 
 
