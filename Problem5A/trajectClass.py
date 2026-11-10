@@ -20,20 +20,22 @@ from BorisMethod import boris
 
 
 class Traject():
-    def __init__(self,system,h=0.1,T=1e5):
+    def __init__(self, system, h=0.1, T=1e5, only_symmetric=False):
         self.sys = create_2d() if system == "2d" else create_tokamak()
         self.h, self.T = h, T
-
+        self.only_symmetric = only_symmetric
         self.results = {}
-        for method in (RK4, boris, symmetricMultistep):
+
+        methods = (symmetricMultistep,) if only_symmetric else (RK4, boris, symmetricMultistep)
+        for method in methods:
             X, V, t, name = method(self.sys, h, T)
             print(f"{name} done")
             self.results[name] = dict(X=X, V=V, t=t)
 
-
-        t = self.results["RK4"]["t"]
-        self.results["ref"] = dict(X=findXref(self.sys, t), t=t)
-        print(f"Ref Done")
+        if not only_symmetric:
+            t = self.results["RK4"]["t"]
+            self.results["ref"] = dict(X=findXref(self.sys, t), t=t)
+            print("Ref done")
 
     def trajectPlot(self, cutoff=None):
         """Plot (x1, x2) for each method in a 2x2 grid; the fourth panel is a 3D plot of the reference."""
@@ -95,7 +97,7 @@ class Traject():
             if name == "ref":
                 continue
             err = np.linalg.norm(r["X"] - ref["X"], axis=1)
-            err[~np.isfinite(err)] = np.nan              # blown-up points are skipped
+            err[~np.isfinite(err) | (err > 1e10)] = np.nan   # treat blow-up as missing              
             m = np.ones_like(err, dtype=bool)
             if cutoff is not None:
                 m &= r["t"] <= cutoff
@@ -108,28 +110,43 @@ class Traject():
         fig.tight_layout()
         plt.show()
 
+    def _energyError(self, name, cutoff, stride):
+        """Return (t, |E_n - E_0|) for one method, with blow-up masked."""
+        r = self.results[name]
+        En = E(r["X"], r["V"], self.sys["U"])
+        err = np.abs(En - En[0])
+        err[~np.isfinite(err) | (err > 1e10)] = np.nan          # skip blown-up points
+        m = np.ones_like(err, dtype=bool)
+        if cutoff is not None:
+            m &= r["t"] <= cutoff
+        return r["t"][m][::stride], err[m][::stride]
+    
     def energyPlot(self, cutoff=None, stride=1):
-        """Energy error |E_n - E_0| in a 2x2 grid: one panel per method, plus all methods together."""
-        U = self.sys["U"]
+        """Energy error |E_n - E_0|: one panel if only_symmetric, otherwise a 2x2 grid."""
+        if self.only_symmetric:
+            name = "Symmetric Multistep"
+            t, e = self._energyError(name, cutoff, stride)
+            fig, ax = plt.subplots(figsize=(8, 5))
+            ax.semilogy(t, e, lw=0.6)
+            ax.set_xlabel("$t_n$")
+            ax.set_ylabel(r"$|E_n - E_0|$")
+            ax.set_title(f"{self.sys['name']}: energy error, {name}, $h = {self.h}$")
+            fig.tight_layout()
+            plt.show()
+            return
+
         names = [n for n in self.results if n != "ref"]
         fig, axs = plt.subplots(2, 2, figsize=(10, 8), sharex=True, sharey=True)
         axs = axs.ravel()
 
         for k, name in enumerate(names):
-            r = self.results[name]
-            En = E(r["X"], r["V"], U)
-            err = np.abs(En - En[0])
-            err[~np.isfinite(err)] = np.nan              # skip blown-up points
-            m = np.ones_like(err, dtype=bool)
-            if cutoff is not None:
-                m &= r["t"] <= cutoff
-            t, e = r["t"][m][::stride], err[m][::stride]
-            axs[k].semilogy(t, e, lw=0.6)                # own panel
-            axs[3].semilogy(t, e, lw=1.2 if name == "RK4" else 0.6, label=name, zorder=3 if name == "RK4" else 1)   # combined panel
+            t, e = self._energyError(name, cutoff, stride)
+            axs[k].semilogy(t, e, lw=0.6)                                    # own panel
+            axs[3].semilogy(t, e, lw=1.2 if name == "RK4" else 0.6, label=name,
+                            zorder=3 if name == "RK4" else 1)                # combined panel
             axs[k].set_title(name)
 
         axs[3].set_title("All methods")
-        
         axs[3].legend()
         for ax in axs:
             ax.set_xlabel("$t_n$")
