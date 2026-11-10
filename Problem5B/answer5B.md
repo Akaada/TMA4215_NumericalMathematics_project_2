@@ -13,7 +13,7 @@ $$e_i^{\text{method}} = \big\| x^{\text{method}}_{(N_i)} - x^{\text{ref}}(T) \bi
 The reference solution $x^{\text{ref}}(T)$ is computed with `solve_ivp` on system (1), using `DOP853` (an adaptive Runge–Kutta method of order 8) with `rtol = atol = 1e-12`. It is computed once per system and reused for every method and step size, since $T$ is the same in all runs. The runtime $\tau_i$ of each method is measured with `time.perf_counter()` and includes everything the method does, also the start-up (the half step backwards for Boris and the eight starting values for the multistep method).
 
 
-**Why a log–log plot shows the order.** If $e \approx C h^p$, then $\log e = \log C + p \log h$, which is a straight line with slope $p$. When the step size is halved, the error is divided by $2^p$, so the observed order can be estimated as
+**Why a log–log plot shows the order.** If $e \approx C h^p$, then $\log e = \log C + p \log h$, a straight line with slope $p$. When the step size is halved, the error is divided by $2^p$, so the observed order can be estimated as
 
 $$p_i \approx \log_2 \frac{e_{i-1}}{e_i}.$$
 
@@ -54,13 +54,12 @@ Efficiency is not the runtime alone, but how much runtime a method needs to reac
 The symmetric multistep method looks to be the most efficient, altough just barely. Its most prescise run achives both a lower computation time and error than the fastest RK4 run for both approximations, and its curve seems to stay lower. This makes sense considering that both methods curves should be parallel with a downward slope $ - 1/4 $ in the log plot, since they are fourth order methods. So we can expect The symmetric multistep method to achive lower computation time for the same error, given that it beats out RK4 for the one error.  
 The Boris method is much less efficient in the whole range we measured, its curve lies above the others everywhere. Its slope is $ - 1/2 $, instead of $ - 1/4 $, so the gap will also grow larger as the error tolerance decreases. 
 
-The efficiency results were mostly as expected: higher order pays off when high accuracy is needed, and a method with few function evaluations per step is cheaper. What surprised us a little was how small the error constant of RK4 is compared to the multistep method, which makes RK4 almost as efficient as the multistep method on the Tokamak system even tough it requires more computations.
+The efficiency results were mostly as expected: higher order pays off when high accuracy is needed, and a method with fewer function evaluations per step is cheaper. More surprising was how small the error constant of RK4 is compared to the multistep method, which makes RK4 almost as efficient as the multistep method on the Tokamak system even though it requires more computations. 
 
 ### Conclusion
 
-We verified the expected orders of convergence for all three methods on both systems: order 2 for Boris and order 4 for RK4 and the symmetric multistep method. The only deviation was RK4 on the 2D system, where the observed order of about 4.6 indicates that the error is not yet fully asymptotic for these step sizes.
+We verified the expected orders of convergence for all three methods on both systems: order 2 for Boris and order 4 for RK4 and the symmetric multistep method. The only deviation was RK4 on the 2D system, where the observed order of about 4.6 indicates that the error is not fully asymptotic for these step sizes.
 
-For a fixed step size RK4 is the most accurate method, but it is also the most expensive per step. When accuracy and runtime are considered together, the symmetric multistep method is the most efficient, with RK4 close behind, especially on the Tokamak system. Boris is the least efficient in the whole range we measured. The work–precision curves have the slopes $-1/p$ predicted by the order, so the advantage of the fourth-order methods over Boris grows as the error tolerance decreases.
+For a fixed step size RK4 is the most accurate method, but it is also the most expensive per step. When accuracy and runtime are considered together, the symmetric multistep method is the most efficient, with RK4 close behind, especially on the Tokamak system. Boris is the least efficient in the whole range we measured. The work–precision curves have slopes $-1/p$ predicted by the order $ p $, so the advantage of the fourth-order methods over Boris grows as the error tolerance decreases.
 
-These results only concern accuracy at a fixed, fairly short end time. They do not say anything about the long-time behaviour, such as energy conservation, which is where the Boris method and the symmetric multistep method are expected to have an advantage over RK4 (see Task A).
-
+These results only concern accuracy at a fixed and fairly short end time $T = 10^3$. They do not say anything about the long-time behaviour, such as energy conservation, which we look at in task A.
