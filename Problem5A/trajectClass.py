@@ -20,7 +20,7 @@ from BorisMethod import boris
 
 
 class Traject():
-    def __init__(self,system,h=0.1,T=10e5):
+    def __init__(self,system,h=0.1,T=1e5):
         self.sys = create_2d() if system == "2d" else create_tokamak()
         self.h, self.T = h, T
 
@@ -139,7 +139,3 @@ class Traject():
         fig.suptitle(f"{self.sys['name']}: energy error")
         fig.tight_layout()
         plt.show()
-
-test = Traject("tokamak",T=1e3)
-#test.trajectPlot()
-test.energyPlot()
