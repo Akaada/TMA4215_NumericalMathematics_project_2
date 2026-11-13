@@ -51,8 +51,8 @@ def create_tokamak():
         return np.array([
             [0.0, 0.0, 0.0],
             [(rho - 1)/(2*rho), -x2/(2*rho*(rho + x1)), 0.0],
-            [(x2*x3 - 2*x1)/(2*rho**2), -(x1*x3 + 2*x2)/(2*rho**2), -0.5*np.arctan2(x2, x1)],
-        ])
+            [(x2*x3 - 2*x1)/(2*rho**2), -(x1*x3 + 2*x2)/(2*rho**2), -0.5*np.arctan2(x2, x1)], 
+        ])# important to use arctan2 so avoid blow up
 
     def A(x): # The A function
         x1, x2, x3 = x
@@ -60,8 +60,8 @@ def create_tokamak():
         return np.array([
             0.0,
             0.5 * (x1 - np.log(rho + x1)),
-            -0.5 * (x3 * np.arctan2(x2, x1) + np.log(rho**2)),
-        ])
+            -0.5 * (x3 * np.arctan2(x2, x1) + np.log(rho**2)), 
+        ])# important to use arctan2 so avoid blow up
 
     def B(x): # The B function
         x1, x2, x3 = x
