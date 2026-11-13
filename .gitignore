@@ -4,3 +4,4 @@ __pycache__/
 
 # Jupyter-sjekkpunkter
 .ipynb_checkpoints/
+.venv
