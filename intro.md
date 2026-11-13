@@ -208,5 +208,114 @@ which we generate by solving with `solve_ivp` (DOP853,
 `rtol=1e-12`, `atol=1e-12`).
 
 
+### Jacobian of the 2D vector potential
 
+We use the same convention $(A'(x))_{ij} = \dfrac{\partial A_i}{\partial x_j}$ as in tokamak. With $r = \sqrt{x_1^2 + x_2^2}$, the vector potential is
+
+$$
+A(x) = \frac{r}{3}\begin{pmatrix} -x_2 \\ x_1 \\ 0 \end{pmatrix}, \qquad
+A_1 = -\tfrac13 x_2 r, \qquad A_2 = \tfrac13 x_1 r, \qquad A_3 = 0.
+$$
+
+
+
+$$
+\frac{\partial r}{\partial x_1} = \frac{x_1}{r}, \qquad
+\frac{\partial r}{\partial x_2} = \frac{x_2}{r}, \qquad
+\frac{\partial r}{\partial x_3} = 0.
+$$
+
+No component depends on $x_3$, therefore the third column is zero.  Since $A_3 = 0$, the third row is also zero. The remaining entries follow from the product rule.
+
+**Row 1:**
+
+$$
+\frac{\partial A_1}{\partial x_1} = -\frac13 x_2 \frac{x_1}{r} = -\frac{x_1 x_2}{3r}, \qquad
+\frac{\partial A_1}{\partial x_2} = -\frac13\Big(r + x_2\frac{x_2}{r}\Big) = -\frac{r^2 + x_2^2}{3r}.
+$$
+
+**Row 2:**
+
+$$
+\frac{\partial A_2}{\partial x_1} = \frac13\Big(r + x_1\frac{x_1}{r}\Big) = \frac{r^2 + x_1^2}{3r}, \qquad
+\frac{\partial A_2}{\partial x_2} = \frac13 x_1 \frac{x_2}{r} = \frac{x_1 x_2}{3r}.
+$$
+
+**Result**
+
+$$
+A'(x) = \frac{1}{3r}
+\begin{pmatrix}
+-x_1 x_2 & -(r^2 + x_2^2) & 0 \\
+r^2 + x_1^2 & x_1 x_2 & 0 \\
+0 & 0 & 0
+\end{pmatrix}
+$$
+
+The 3D matrix explains a 2D system, i.e only the upper left corner has values. This makes sense considering we are in a 2D system. 
+
+### Jacobian of the Tokamak vector potential
+
+We use the convention $(A'(x))_{ij} = \dfrac{\partial A_i}{\partial x_j}$, so row $i$ is the gradient of the component $A_i$. We define $\rho = \sqrt{x_1^2 + x_2^2}$ to make notation easier. The vector potential in the Tokamak system is defined as
+
+$$
+A_1 = 0, \qquad
+A_2 = \tfrac12\big(x_1 - \ln(\rho + x_1)\big), \qquad
+A_3 = -\tfrac12\Big(x_3 \arctan\tfrac{x_2}{x_1} + \ln(\rho^2)\Big).
+$$
+
+**Helping derivatives**
+We calculate some derivatives that will be used troughout the derivation. Making it easier to do the actual calculation.
+$$
+\frac{\partial \rho}{\partial x_1} = \frac{x_1}{\rho}, \qquad
+\frac{\partial \rho}{\partial x_2} = \frac{x_2}{\rho}, \qquad
+\frac{\partial}{\partial x_1}\arctan\frac{x_2}{x_1} = -\frac{x_2}{\rho^2}, \qquad
+\frac{\partial}{\partial x_2}\arctan\frac{x_2}{x_1} = \frac{x_1}{\rho^2},
+$$
+
+$$
+\frac{\partial}{\partial x_1}\ln(\rho^2) = \frac{2x_1}{\rho^2}, \qquad
+\frac{\partial}{\partial x_2}\ln(\rho^2) = \frac{2x_2}{\rho^2}.
+$$
+
+**Row 1:** $A_1 = 0$, making all entries on row 1 be zero.
+
+**Row 2:** $A_2$ does not depend on $x_3$, so $\partial A_2/\partial x_3 = 0$. For $x_1$:
+
+$$
+\frac{\partial}{\partial x_1}\ln(\rho + x_1) = \frac{x_1/\rho + 1}{\rho + x_1} = \frac{(x_1 + \rho)/\rho}{\rho + x_1} = \frac{1}{\rho}
+\quad\Rightarrow\quad
+\frac{\partial A_2}{\partial x_1} = \frac12\Big(1 - \frac{1}{\rho}\Big) = \frac{\rho - 1}{2\rho}.
+$$
+
+For $x_2$:
+
+$$
+\frac{\partial A_2}{\partial x_2} = -\frac12 \cdot \frac{x_2/\rho}{\rho + x_1} = -\frac{x_2}{2\rho(\rho + x_1)}.
+$$
+
+**Row 3:**
+
+$$
+\frac{\partial A_3}{\partial x_1} = -\frac12\Big(-\frac{x_2 x_3}{\rho^2} + \frac{2x_1}{\rho^2}\Big) = \frac{x_2 x_3 - 2x_1}{2\rho^2},
+$$
+
+$$
+\frac{\partial A_3}{\partial x_2} = -\frac12\Big(\frac{x_1 x_3}{\rho^2} + \frac{2x_2}{\rho^2}\Big) = -\frac{x_1 x_3 + 2x_2}{2\rho^2},
+$$
+
+$$
+\frac{\partial A_3}{\partial x_3} = -\frac12 \arctan\frac{x_2}{x_1}.
+$$
+
+**Result**
+
+$$
+A'(x) =
+\begin{pmatrix}
+0 & 0 & 0 \\[4pt]
+\dfrac{\rho - 1}{2\rho} & -\dfrac{x_2}{2\rho(\rho + x_1)} & 0 \\[10pt]
+\dfrac{x_2 x_3 - 2x_1}{2\rho^2} & -\dfrac{x_1 x_3 + 2x_2}{2\rho^2} & -\dfrac12 \arctan\dfrac{x_2}{x_1}
+\end{pmatrix}
+$$
 
